@@ -148,3 +148,40 @@ display(dbutils.fs.ls("/Volumes/workspace/finance_dev/raw_files/master/customers
 
 tx=spark.read.csv("/Volumes/workspace/finance_dev/raw_files/transactions/transactions_2025_07_01",header=True,inferSchema=True)
 display(tx)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ###Simulate customer data for SCD2 practise
+
+# COMMAND ----------
+
+
+import pandas as pd
+
+# -----------------------------
+# Customers Day 2 (Incremental)
+# -----------------------------
+
+customers_day2 = pd.DataFrame([
+    ["C001", "Qatar Energy", "MiddleEast"],      # unchanged
+    ["C002", "Shell Trading", "Europe"],         # unchanged
+    ["C003", "LNG Partners", "Europe"],          # CHANGED (Asia -> Europe)
+    ["C004", "PetroChem Global", "MiddleEast"],  # unchanged
+    ["C005", "Energy Retail", "Europe"],         # unchanged
+    ["C006", "Green Hydrogen Co", "MiddleEast"]  # NEW
+], columns=["CustomerID", "CustomerName", "Region"])
+
+display(customers_day2)
+
+# COMMAND ----------
+
+(
+    spark.createDataFrame(customers_day2)
+    .coalesce(1)
+    .write.mode("overwrite")
+    .option("header", True)
+    .csv("/Volumes/workspace/finance_dev/raw_files/master/customers/customers_2025_07_02")
+)
+
+print("Day 2 customer file created")
