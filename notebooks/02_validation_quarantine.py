@@ -124,6 +124,11 @@ display(quarantine_df)
 
 # COMMAND ----------
 
+# MAGIC %sql
+# MAGIC SELECT * FROM finance_dev.quarantine_transactions
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC ###Save valid transaction records into silver layer
 

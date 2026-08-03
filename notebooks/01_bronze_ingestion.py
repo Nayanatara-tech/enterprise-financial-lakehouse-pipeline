@@ -17,6 +17,10 @@
 
 # COMMAND ----------
 
+
+
+# COMMAND ----------
+
 # MAGIC %sql
 # MAGIC CREATE TABLE IF NOT EXISTS finance_dev.processed_files (
 # MAGIC     FileName STRING,
@@ -74,11 +78,18 @@ def process_folder(folder_name, table_name, path):
         .withColumn("IngestionTime", current_timestamp())
         .withColumn("SourceFile", lit(file_name))
         .withColumn("RunID", lit(run_id)))
-
-    (bronze_df.write
-        .format("delta")
-        .mode("append")
-        .saveAsTable(f"finance_dev.{table_name}"))
+    
+    if transaction_table=="bronze_transactions":
+        (bronze_df.write
+            .format("delta")
+            .mode("append")
+            .partitionBy("TransactionDate")
+            .saveAsTable(f"finance_dev.{table_name}"))
+    else:
+        (bronze_df.write
+            .format("delta")
+            .mode("append")
+            .saveAsTable(f"finance_dev.{table_name}"))
 
     spark.sql(f"""
         INSERT INTO finance_dev.processed_files
