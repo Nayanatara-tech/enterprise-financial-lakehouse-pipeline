@@ -1,4 +1,8 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "2"
+# ///
 # MAGIC %md
 # MAGIC ###Anamoly Detection
 
@@ -169,7 +173,7 @@
 # MAGIC           'affected_customers', affected_customers,
 # MAGIC           'affected_currencies', affected_currencies,
 # MAGIC           'affected_business_units', affected_business_units
-# MAGIC       )) FROM anomaly_summary),
+# MAGIC       )) FROM finance_dev.gold_anomaly_summary),
 # MAGIC       '. Top customers: ',
 # MAGIC       (SELECT to_json(collect_list(named_struct(
 # MAGIC           'customer', CustomerName,
