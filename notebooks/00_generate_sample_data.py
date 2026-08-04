@@ -9,7 +9,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC CREATE VOLUME IF NOT EXISTS workspace.finance_dev.raw_files;
+# MAGIC CREATE VOLUME IF NOT EXISTS workspace.finance.raw_files;
 
 # COMMAND ----------
 
@@ -20,7 +20,7 @@ from datetime import datetime, timedelta
 
 spark = SparkSession.builder.getOrCreate()
 
-base_path = "/Volumes/workspace/finance_dev/raw_files"
+base_path = "/Volumes/workspace/finance/raw_files"
 
 # -----------------------------
 # Customers (Dimension Source)
@@ -142,11 +142,11 @@ print(f"Transactions rows: {len(transactions)}")
 
 # COMMAND ----------
 
-display(dbutils.fs.ls("/Volumes/workspace/finance_dev/raw_files/master/customers"))
+display(dbutils.fs.ls("/Volumes/workspace/finance/raw_files/master/customers"))
 
 # COMMAND ----------
 
-tx=spark.read.csv("/Volumes/workspace/finance_dev/raw_files/transactions/transactions_2025_07_01",header=True,inferSchema=True)
+tx=spark.read.csv("/Volumes/workspace/finance/raw_files/transactions/transactions_2025_07_01",header=True,inferSchema=True)
 display(tx)
 
 # COMMAND ----------
@@ -181,7 +181,7 @@ display(customers_day2)
     .coalesce(1)
     .write.mode("overwrite")
     .option("header", True)
-    .csv("/Volumes/workspace/finance_dev/raw_files/master/customers/customers_2025_07_02")
+    .csv("/Volumes/workspace/finance/raw_files/master/customers/customers_2025_07_02")
 )
 
 print("Day 2 customer file created")

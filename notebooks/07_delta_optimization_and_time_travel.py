@@ -1,11 +1,15 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "2"
+# ///
 # MAGIC %md
 # MAGIC ###Delta History
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC DESCRIBE HISTORY finance_dev.silver_customers_scd2;
+# MAGIC DESCRIBE HISTORY finance.silver_customers_scd2;
 
 # COMMAND ----------
 
@@ -17,7 +21,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from finance_dev.silver_customers_scd2 version as of 3
+# MAGIC select * from finance.silver_customers_scd2 version as of 1
 
 # COMMAND ----------
 
@@ -29,14 +33,14 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC DESCRIBE DETAIL finance_dev.bronze_transactions
+# MAGIC DESCRIBE DETAIL finance.bronze_transactions
 
 # COMMAND ----------
 
 # MAGIC %sql
 # MAGIC EXPLAIN
 # MAGIC SELECT *
-# MAGIC FROM finance_dev.bronze_transactions
+# MAGIC FROM finance.bronze_transactions
 # MAGIC WHERE TransactionDate = '2025-07-01';
 
 # COMMAND ----------
@@ -49,7 +53,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC OPTIMIZE finance_dev.silver_transactions_enriched
+# MAGIC OPTIMIZE finance.silver_transactions_enriched
 # MAGIC ZORDER BY (CustomerID, TransactionDate);
 
 # COMMAND ----------
@@ -63,9 +67,9 @@
 
 from pyspark.sql.functions import broadcast
 
-txn = spark.table("finance_dev.silver_transactions_staging")
-acc = spark.table("finance_dev.silver_accounts")
-fx = spark.table("finance_dev.silver_exchange_rates")
+txn = spark.table("finance.silver_transactions_staging")
+acc = spark.table("finance.silver_accounts")
+fx = spark.table("finance.silver_exchange_rates")
 
 broadcast_demo = (
     txn.join(broadcast(acc), "AccountID", "left")
@@ -84,7 +88,7 @@ display(broadcast_demo.limit(5))
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC --VACUUM finance_dev.silver_customers_scd2 RETAIN 168 HOURS;
+# MAGIC --VACUUM finance.silver_customers_scd2 RETAIN 168 HOURS;
 
 # COMMAND ----------
 
@@ -92,7 +96,7 @@ display(broadcast_demo.limit(5))
 # MAGIC ###Change Data Feed (no implementation)
 # MAGIC
 # MAGIC
-# MAGIC ALTER TABLE finance_dev.silver_customers_scd2
+# MAGIC ALTER TABLE finance.silver_customers_scd2
 # MAGIC SET TBLPROPERTIES (delta.enableChangeDataFeed = true)
 # MAGIC
 # MAGIC Explanation:

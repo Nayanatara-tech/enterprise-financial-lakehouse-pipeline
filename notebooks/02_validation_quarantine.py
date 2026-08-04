@@ -14,7 +14,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC CREATE TABLE IF NOT EXISTS finance_dev.quarantine_transactions (
+# MAGIC CREATE TABLE IF NOT EXISTS finance.quarantine_transactions (
 # MAGIC     TransactionID STRING,
 # MAGIC     AccountID STRING,
 # MAGIC     TransactionDate DATE,
@@ -38,9 +38,9 @@
 # COMMAND ----------
 
 from pyspark.sql.functions import *
-tx=spark.table("finance_dev.bronze_transactions")
-accounts=spark.table("finance_dev.bronze_accounts")
-rates=spark.table("finance_dev.bronze_exchange_rates")
+tx=spark.table("finance.bronze_transactions")
+accounts=spark.table("finance.bronze_accounts")
+rates=spark.table("finance.bronze_exchange_rates")
 
 display(tx.count())
 display(accounts.count())
@@ -120,12 +120,12 @@ display(quarantine_df)
 (quarantine_df.write
     .format("delta")
     .mode("append")
-    .saveAsTable("finance_dev.quarantine_transactions"))
+    .saveAsTable("finance.quarantine_transactions"))
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC SELECT * FROM finance_dev.quarantine_transactions
+# MAGIC SELECT * FROM finance.quarantine_transactions
 
 # COMMAND ----------
 
@@ -144,7 +144,7 @@ print("Quarantined records:", quarantine_df.count())
 (valid_records.write
     .format("delta")
     .mode("overwrite")
-    .saveAsTable("finance_dev.silver_transactions_staging"))
+    .saveAsTable("finance.silver_transactions_staging"))
 
 # COMMAND ----------
 

@@ -17,12 +17,8 @@
 
 # COMMAND ----------
 
-
-
-# COMMAND ----------
-
 # MAGIC %sql
-# MAGIC CREATE TABLE IF NOT EXISTS finance_dev.processed_files (
+# MAGIC CREATE TABLE IF NOT EXISTS finance.processed_files (
 # MAGIC     FileName STRING,
 # MAGIC     RunID STRING,
 # MAGIC     Layer STRING,
@@ -36,7 +32,7 @@
 from pyspark.sql.functions import current_timestamp, lit
 from uuid import uuid4
 
-base_path = "/Volumes/workspace/finance_dev/raw_files"
+base_path = "/Volumes/workspace/finance/raw_files"
 
 master_config = {
     "customers": "bronze_customers",
@@ -57,7 +53,7 @@ def process_folder(folder_name, table_name, path):
 
     existing = spark.sql(f"""
         SELECT COUNT(*) as cnt
-        FROM finance_dev.processed_files
+        FROM finance.processed_files
         WHERE FileName = '{file_name}'
           AND Layer = 'BRONZE'
           AND Status = 'SUCCESS'
@@ -79,20 +75,20 @@ def process_folder(folder_name, table_name, path):
         .withColumn("SourceFile", lit(file_name))
         .withColumn("RunID", lit(run_id)))
     
-    if transaction_table=="bronze_transactions":
+    if folder_name.startswith("transactions_"):
         (bronze_df.write
             .format("delta")
             .mode("append")
             .partitionBy("TransactionDate")
-            .saveAsTable(f"finance_dev.{table_name}"))
+            .saveAsTable(f"finance.{table_name}"))
     else:
         (bronze_df.write
             .format("delta")
             .mode("append")
-            .saveAsTable(f"finance_dev.{table_name}"))
+            .saveAsTable(f"finance.{table_name}"))
 
     spark.sql(f"""
-        INSERT INTO finance_dev.processed_files
+        INSERT INTO finance.processed_files
         VALUES (
             '{file_name}',
             '{run_id}',
@@ -103,7 +99,7 @@ def process_folder(folder_name, table_name, path):
         )
     """)
 
-    print(f"Loaded {file_name} -> finance_dev.{table_name} ({row_count} rows)")
+    print(f"Loaded {file_name} -> finance.{table_name} ({row_count} rows)")
 
 for source_folder, table_name in master_config.items():
 
@@ -138,14 +134,14 @@ for txn_folder in transaction_folders:
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC SELECT * FROM finance_dev.processed_files;
+# MAGIC SELECT * FROM finance.processed_files;
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from finance_dev.bronze_customers
+# MAGIC select * from finance.bronze_customers
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select count(*) from finance_dev.bronze_transactions
+# MAGIC select count(*) from finance.bronze_transactions

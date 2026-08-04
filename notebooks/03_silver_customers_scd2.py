@@ -9,7 +9,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC CREATE TABLE IF NOT EXISTS finance_dev.silver_customers_scd2 (
+# MAGIC CREATE TABLE IF NOT EXISTS finance.silver_customers_scd2 (
 # MAGIC     CustomerSK BIGINT GENERATED ALWAYS AS IDENTITY,
 # MAGIC     CustomerID STRING,
 # MAGIC     CustomerName STRING,
@@ -22,16 +22,16 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from finance_dev.bronze_customers
+# MAGIC select * from finance.bronze_customers
 
 # COMMAND ----------
 
 from pyspark.sql.functions import *
-src = spark.table("finance_dev.bronze_customers").select(
+src = spark.table("finance.bronze_customers").select(
     "CustomerID", "CustomerName", "Region"
 )
 
-current_target = (spark.table("finance_dev.silver_customers_scd2")
+current_target = (spark.table("finance.silver_customers_scd2")
                   .filter(col("CurrentFlag") == "Y"))
 
 # New customers
@@ -77,7 +77,7 @@ display(staged_updates)
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC MERGE INTO finance_dev.silver_customers_scd2 AS target
+# MAGIC MERGE INTO finance.silver_customers_scd2 AS target
 # MAGIC USING staged_updates AS source
 # MAGIC ON target.CustomerID = source.MergeKey
 # MAGIC AND target.CurrentFlag = 'Y'
@@ -108,4 +108,4 @@ display(staged_updates)
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from finance_dev.silver_customers_scd2
+# MAGIC select * from finance.silver_customers_scd2

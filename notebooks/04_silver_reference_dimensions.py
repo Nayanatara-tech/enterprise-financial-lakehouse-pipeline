@@ -9,15 +9,15 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC CREATE OR REPLACE TABLE finance_dev.silver_accounts as
+# MAGIC CREATE OR REPLACE TABLE finance.silver_accounts as
 # MAGIC select distinct 
 # MAGIC AccountID,
 # MAGIC CustomerID,
 # MAGIC AccountType,
 # MAGIC current_timestamp() as Load_timestamp
-# MAGIC from finance_dev.bronze_accounts;
+# MAGIC from finance.bronze_accounts;
 # MAGIC
-# MAGIC select * from finance_dev.silver_accounts;
+# MAGIC select * from finance.silver_accounts;
 
 # COMMAND ----------
 
@@ -27,14 +27,14 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC CREATE OR REPLACE TABLE finance_dev.silver_cost_centers as
+# MAGIC CREATE OR REPLACE TABLE finance.silver_cost_centers as
 # MAGIC select distinct 
 # MAGIC CostCenter,
 # MAGIC Department,
 # MAGIC current_timestamp() as Load_timestamp
-# MAGIC from finance_dev.bronze_cost_centers;
+# MAGIC from finance.bronze_cost_centers;
 # MAGIC     
-# MAGIC SELECT * FROM finance_dev.silver_cost_centers;
+# MAGIC SELECT * FROM finance.silver_cost_centers;
 
 # COMMAND ----------
 
@@ -44,14 +44,14 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC CREATE OR REPLACE TABLE finance_dev.silver_exchange_rates as
+# MAGIC CREATE OR REPLACE TABLE finance.silver_exchange_rates as
 # MAGIC select distinct 
 # MAGIC Currency,
 # MAGIC USD_Rate,
 # MAGIC current_timestamp() as Load_timestamp
-# MAGIC from finance_dev.bronze_exchange_rates;
+# MAGIC from finance.bronze_exchange_rates;
 # MAGIC     
-# MAGIC SELECT * FROM finance_dev.silver_exchange_rates;
+# MAGIC SELECT * FROM finance.silver_exchange_rates;
 
 # COMMAND ----------
 
@@ -65,7 +65,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC CREATE OR REPLACE TABLE finance_dev.silver_transactions_enriched AS
+# MAGIC CREATE OR REPLACE TABLE finance.silver_transactions_enriched AS
 # MAGIC SELECT
 # MAGIC     t.TransactionID,
 # MAGIC     t.TransactionDate,
@@ -87,19 +87,19 @@
 # MAGIC     c.CustomerName,
 # MAGIC     c.Region
 # MAGIC
-# MAGIC FROM finance_dev.silver_transactions_staging t
+# MAGIC FROM finance.silver_transactions_staging t
 # MAGIC
-# MAGIC LEFT JOIN finance_dev.silver_cost_centers cc
+# MAGIC LEFT JOIN finance.silver_cost_centers cc
 # MAGIC     ON t.CostCenter = cc.CostCenter
 # MAGIC
-# MAGIC LEFT JOIN finance_dev.silver_accounts a
+# MAGIC LEFT JOIN finance.silver_accounts a
 # MAGIC     ON t.AccountID = a.AccountID
 # MAGIC     
-# MAGIC LEFT JOIN finance_dev.silver_customers_scd2 c
+# MAGIC LEFT JOIN finance.silver_customers_scd2 c
 # MAGIC     ON a.CustomerID = c.CustomerID
 # MAGIC    AND c.CurrentFlag = 'Y'
 # MAGIC
-# MAGIC LEFT JOIN finance_dev.silver_exchange_rates r
+# MAGIC LEFT JOIN finance.silver_exchange_rates r
 # MAGIC     ON t.Currency = r.Currency
 # MAGIC
 # MAGIC
@@ -109,4 +109,4 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from finance_dev.silver_transactions_enriched
+# MAGIC select * from finance.silver_transactions_enriched
