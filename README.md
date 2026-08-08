@@ -29,7 +29,7 @@ End-to-end Databricks Medallion architecture project implementing incremental in
 
 ## Architecture
 
-<img width="795" height="926" alt="image" src="https://github.com/user-attachments/assets/526073d8-34b6-4fe3-bc8b-33f158351a5c" />
+<img width="545" height="635" alt="image" src="https://github.com/user-attachments/assets/c135114a-cf6a-49a3-b841-c946ad45057c" />
 
 
 ## Workflow
