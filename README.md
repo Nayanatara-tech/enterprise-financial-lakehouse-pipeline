@@ -80,7 +80,11 @@ feature/* → develop → main
 
 a collaborative enterprise development process using pull requests and controlled merges.
 
-Pull Requests
+### Branches
+
+<img width="1747" height="752" alt="image" src="https://github.com/user-attachments/assets/9ecfbfc2-e230-47c6-8927-b90b20cdafea" />
+
+### Pull Requests
 
 <img width="1680" height="873" alt="image" src="https://github.com/user-attachments/assets/8842170f-e00b-48a5-a0ca-6aa43b942d90" />
 
