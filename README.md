@@ -64,6 +64,40 @@ End-to-end Databricks Medallion architecture project implementing incremental in
 <img width="940" height="418" alt="image" src="https://github.com/user-attachments/assets/4361748f-513a-477d-9359-21038ab2002a" />
 
 
+## Engineering Practices
+
+### Git Workflow
+
+This project was developed using a feature-branch workflow:
+
+```text
+feature/* → develop → main
+```
+
+- Feature branches were used for isolated development
+- Changes were validated in `develop`
+- Final production-ready code was merged into `main`
+
+a collaborative enterprise development process using pull requests and controlled merges.
+
+### Databricks Workflow Orchestration
+
+- Implemented as a Databricks Workflow (Job)
+- Task dependencies enforce Medallion execution order
+- Email notifications enabled for workflow monitoring
+
+### Delta Lake Performance Concepts
+
+The project includes hands-on exploration of:
+
+- **Partitioning** (`TransactionDate`)
+- **Partition pruning** verified through `EXPLAIN`
+- **Delta History**
+- **Time Travel**
+- **OPTIMIZE**
+- **ZORDER**
+
+For this demo dataset, `OPTIMIZE` did not rewrite files because the table was already compact, which is the expected Delta Lake behavior for very small tables.
 
 ## Repository Structure
 
